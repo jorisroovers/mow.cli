@@ -2,6 +2,7 @@ package cli
 
 import (
 	"flag"
+	"os"
 )
 
 /*
@@ -44,5 +45,17 @@ func (cli *Cli) Run(args []string) error {
 	if err := cli.doInit(); err != nil {
 		panic(err)
 	}
-	return cli.parse(args[1:])
+	inFlow := &step{desc: "RootIn"}
+	outFlow := &step{desc: "RootOut"}
+	return cli.parse(args[1:], inFlow, inFlow, outFlow)
+}
+
+type exit int
+
+func Exit(code int) {
+	panic(exit(code))
+}
+
+var exiter = func(code int) {
+	os.Exit(code)
 }
